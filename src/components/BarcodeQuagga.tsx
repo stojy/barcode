@@ -1,12 +1,26 @@
 import React from 'react';
 import Quagga from 'quagga'
 
-export class BarcodeQuagga extends React.Component<{}, {active: boolean}> {
+
+interface BarcodeProps {
+}
+
+interface BarcodeState {
+    active: boolean,
+    code: string | null
+}
+
+export class BarcodeQuagga extends React.Component<BarcodeProps, BarcodeState> {
+    private readonly initialState = {
+        active: false,
+        code: null
+    };
+
     constructor(props: any) {
         super(props)
-        this.state = {
-            active: false
-        }
+        
+        // todo; lift state and use a params callback
+        this.state = this.initialState
     }
 
     render() {
@@ -15,7 +29,7 @@ export class BarcodeQuagga extends React.Component<{}, {active: boolean}> {
             {
                 this.state.active ? null :                 
                     <button onClick={() => this.start()}>
-                        {"Scan (Quagga)"}
+                        {"Start (Quagga)"}
                     </button>
             }
             {
@@ -24,15 +38,23 @@ export class BarcodeQuagga extends React.Component<{}, {active: boolean}> {
                         {"Stop"}
                     </button> : null
             }
+            {
+                this.state.code ? 
+                    <>
+                        <br/>
+                        <div>{`Code: ${this.state.code}`}</div>
+                    </>  
+                    : null
+            }
             </>
-            )
-        }
+        )
+    }
 
     start() {
         console.log("starting..")
         const self = this
 
-        this.setState({active: true})
+        this.setState({...this.state, active: true})
 
         const config = {
             numOfWorkers: navigator.hardwareConcurrency,
@@ -98,13 +120,14 @@ export class BarcodeQuagga extends React.Component<{}, {active: boolean}> {
 
     handleDetected(data: any) {
         console.log(`detected: code=${data.codeResult.code}`)
+        this.setState({...this.state, code: data.codeResult.code})
         this.beep();
     }
 
     stop()
     {
         console.log("stopping..")
-        this.setState({active: false})
+        this.setState({...this.initialState})
 
         Quagga.offDetected(this.handleDetected);
         Quagga.stop()
