@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import {BarcodeQuagga} from './components/BarcodeQuagga.js'
+import {BarcodeQuagga} from './components/BarcodeQuagga'
 
 function App() {
   return (
@@ -17,3 +17,4 @@ function App() {
 }
 
 export default App;
+ 

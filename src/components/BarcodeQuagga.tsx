@@ -68,7 +68,7 @@ function start() {
     };
     console.log(`config: ${JSON.stringify(config)}`)
 
-    Quagga.init(config, function(err) {
+    Quagga.init(config, function(err: any) {
           if (err) {
               console.log(err);
               return
@@ -81,7 +81,7 @@ function start() {
         
     }
 
-function handleDetected(data) {
+function handleDetected(data: any) {
     debugger
     console.log(`detected: code=${data.codeResult.code}`)
     beep();
