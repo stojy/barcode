@@ -7,5 +7,7 @@
 			"path": "..\\quagga2-react-example"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"editor.tabSize": 2
+	}
 }
