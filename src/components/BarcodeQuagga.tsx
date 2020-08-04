@@ -78,10 +78,10 @@ export class BarcodeQuagga extends React.Component<BarcodeProps, BarcodeState> {
             decoder: {
                 readers: ["code_128_reader"],
                 debug: {
-                    drawBoundingBox: true,
-                    showFrequency: true,
-                    drawScanline: true,
-                    showPattern: true
+                    drawBoundingBox: false,
+                    showFrequency: false,
+                    drawScanline: false,
+                    showPattern: false
                 },
                 multiple: false
             },
@@ -89,17 +89,17 @@ export class BarcodeQuagga extends React.Component<BarcodeProps, BarcodeState> {
                 halfSample: true,
                 patchSize: "large", // x-small, small, medium, large, x-large
                 debug: {
-                showCanvas: true,
-                showPatches: true,
-                showFoundPatches: true,
-                showSkeleton: true,
-                showLabels: true,
-                showPatchLabels: true,
-                showRemainingPatchLabels: true,
+                showCanvas: false,
+                showPatches: false,
+                showFoundPatches: false,
+                showSkeleton: false,
+                showLabels: false,
+                showPatchLabels: false,
+                showRemainingPatchLabels: false,
                 boxFromPatches: {
-                    showTransformed: true,
-                    showTransformedBox: true,
-                    showBB: true
+                    showTransformed: false,
+                    showTransformedBox: false,
+                    showBB: false
                 }
                 }
             }

@@ -15,3 +15,7 @@ code {
 button {
   font-size: 1.2em
 }
+
+canvas {
+  display: none;
+}
