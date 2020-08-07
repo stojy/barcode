@@ -1,17 +1,17 @@
 import React from 'react';
 import Quagga from 'quagga'
 
-interface BarcodeProps {
+interface IBarcodeProps {
   width: number,
   height: number
 }
 
-interface BarcodeState {
+interface IBarcodeState {
   active: boolean,
   code: string | null
 }
 
-export class BarcodeQuagga extends React.Component<BarcodeProps, BarcodeState> {
+export class BarcodeQuagga extends React.Component<IBarcodeProps, IBarcodeState> {
   private readonly initialState = {
     active: false,
     code: null
@@ -73,7 +73,7 @@ export class BarcodeQuagga extends React.Component<BarcodeProps, BarcodeState> {
           top: "0%",
           right: "0%",
           left: "0%",
-          bottom: "0%" // bottom offset
+          bottom: "0%"
         },
       },
       decoder: {
