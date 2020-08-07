@@ -17,7 +17,7 @@ export class BarcodeQuagga extends React.Component<IBarcodeProps, IBarcodeState>
     code: null
   };
 
-  constructor(props: any) {
+  constructor(props: IBarcodeProps) {
     super(props)
 
     // todo; lift state and use a params callback

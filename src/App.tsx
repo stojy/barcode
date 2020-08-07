@@ -1,10 +1,8 @@
 import React from 'react';
 import './App.css';
 import { BarcodeQuagga } from './components/BarcodeQuagga'
+import { Droppy } from './components/Droppy'
 import logo from './barcode.png'
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-
 
 interface IAppState {
   width: number,
@@ -22,8 +20,7 @@ class App extends React.Component<{}, IAppState> {
     this.state = this.initialState;
   }
 
-  private widths: number[] = [100, 200, 250, 300, 480, 800, 960, 1200, 1920];
-  private heights: number[] = [100, 200, 250, 300, 480, 800, 960, 1200, 1920];
+  private resolutions: number[] = [100, 200, 250, 300, 480, 800, 960, 1200, 1920];
 
   render() {
     return (
@@ -36,34 +33,28 @@ class App extends React.Component<{}, IAppState> {
             <div id='captureTarget' />
 
             <span>
-              <DropdownButton id="dropdown-basic-button" title={`Width: ${this.state.width}`}>
-                {
-                  this.widths.map(width => <Dropdown.Item eventKey={`${width}`} onSelect={this.selectedWidth}>{width}px</Dropdown.Item>)
-                }
-              </DropdownButton>
-
-              <DropdownButton id="dropdown-basic-button" title={`Height: ${this.state.height}`}>
-                {
-                  this.heights.map(height => <Dropdown.Item eventKey={`${height}`} onSelect={this.selectedHeight}>{height}px</Dropdown.Item>)
-                }
-              </DropdownButton>
-
+              <Droppy title={`Width: ${this.state.width}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleWidthSelected} />
+              <Droppy title={`Width: ${this.state.height}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleHeightSelected} />
               <BarcodeQuagga width={this.state.width} height={this.state.height} />
-
             </span>
-
           </header>
         </div>
       </>
     )
   }
   
-  selectedWidth = (eventKey: string | null, e: React.SyntheticEvent<unknown>): void => {
-    this.setState({...this.state, width: Number(eventKey)});
+  handleWidthSelected = (value: string | null): void => {
+    let val = value?.match(/\d+/)?.[0];
+    if (val !== undefined) {
+      this.setState({...this.state, width: Number(val)});
+    }
   }
 
-  selectedHeight = (eventKey: string | null, e: React.SyntheticEvent<unknown>): void => {
-    this.setState({...this.state, height: Number(eventKey)});
+  handleHeightSelected = (value: string | null): void => {
+    let val = value?.match(/\d+/)?.[0];
+    if (val !== undefined) {
+      this.setState({...this.state, height: Number(val)});
+    }
   }
 }
 
