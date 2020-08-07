@@ -2,4 +2,4 @@
 
 ## Hosting
 
-[gh-pages](https://stojy.github.io/barcode/)
+[github](https://stojy.github.io/barcode/)
