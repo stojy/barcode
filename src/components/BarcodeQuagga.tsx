@@ -65,8 +65,8 @@ export class BarcodeQuagga extends React.Component<BarcodeProps, BarcodeState> {
         type: "LiveStream",
         target: '#captureTarget',
         constraints: {
-          width: 1280,
-          height: 240,
+          width: this.props.width,
+          height: this.props.height,
           facingMode: "environment"
         },
         area: {
