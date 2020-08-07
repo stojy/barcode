@@ -1,13 +1,13 @@
 {
-	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "..\\quagga2-react-example"
-		}
-	],
-	"settings": {
-		"editor.tabSize": 2
-	}
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "..\\quagga2-react-example"
+    }
+  ],
+  "settings": {
+    "editor.tabSize": 2
+  }
 }

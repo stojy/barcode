@@ -1,4 +1,3 @@
-
 # Barcode POC
 
 ## Hosting

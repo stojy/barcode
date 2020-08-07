@@ -11,7 +11,7 @@ function App() {
         <br/>
         <br/>
         <div id='captureTarget' />
-        <BarcodeQuagga/>
+        <BarcodeQuagga width={800} height={400}/>
       </header>
     </div>
   );
