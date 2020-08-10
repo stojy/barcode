@@ -1,7 +1,7 @@
 {
   "name": "barcode",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "homepage": "https://stojy.github.io/barcode",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
