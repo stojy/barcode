@@ -12,15 +12,6 @@ code {
     monospace;
 }
 
-.mybutton {
-  font-size: 1.2em;
-  margin: 10px;
-}
-
 canvas {
   display: none;
 }
-
-/* span {
-  flex-direction: row;
-} */

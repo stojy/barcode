@@ -4,6 +4,8 @@ import { Droppy } from './components/Droppy'
 import logo from './barcode.png'
 import Button from 'react-bootstrap/esm/Button';
 import { BarcodeQuagga } from './components/BarcodeQuagga';
+import Dropdown from 'react-bootstrap/esm/Dropdown';
+import ButtonGroup from 'react-bootstrap/esm/ButtonGroup';
 
 interface IAppState {
   width: number,
@@ -45,8 +47,12 @@ class App extends React.Component<{}, IAppState> {
                   :
                   (
                     <>
-                      <Droppy title={`Width: ${this.state.width}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleWidthSelected} />
-                      <Droppy title={`Height: ${this.state.height}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleHeightSelected} />
+                      <div>
+                        <Dropdown className='mb-3' as={ButtonGroup}>
+                          <Droppy title={`Width: ${this.state.width}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleWidthSelected} />
+                          <Droppy title={`Height: ${this.state.height}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleHeightSelected} />
+                        </Dropdown>
+                      </div>
                       <Button className='ml-2' onClick={() => this.start()}>Start (Quagga)</Button>
                       <Button className='ml-2' disabled>Start (Quagga2.. TBA)</Button>
                       <Button className='ml-2' disabled>Start (ZXing.. TBA)</Button>
