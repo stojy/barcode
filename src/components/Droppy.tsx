@@ -12,7 +12,7 @@ interface IDroppyProps {
 
 export function Droppy({ title, values, onSelect }: IDroppyProps) {
   return (
-    <DropdownButton className='mr-2'id="dropdown-basic-button" title={title}>
+    <DropdownButton variant="secondary" className='mr-2'id="dropdown-basic-button" title={title}>
       {
         values.map(value => <Dropdown.Item key={`${value}`} eventKey={`${value}`} onSelect={(e) => onSelect(e)}>{value}</Dropdown.Item>)
       }

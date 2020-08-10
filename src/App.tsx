@@ -24,7 +24,10 @@ class App extends React.Component<{}, IAppState> {
 
   constructor(props: any) {
     super(props);
+
     this.state = this.initialState;
+
+    console.log(`app.tsx ctor: state=${JSON.stringify(this.state)}`)
   }
 
   private resolutions: number[] = [100, 200, 250, 300, 480, 800, 960, 1280, 1920];
@@ -38,26 +41,24 @@ class App extends React.Component<{}, IAppState> {
             <img src={logo} className="App-logo" alt="logo" height="300px" />
             <br />
             <br />
-            <div id='captureTarget' />
+            <div id='captureTarget' style={{visibility: this.state.active ? 'visible' : 'collapse'}} />
 
             <div>
               {
                 this.state.active ?
                   <Button className='ml-2' onClick={() => this.stop()}>Stop</Button>
                   :
-                  (
-                    <>
-                      <div>
-                        <Dropdown className='mb-3' as={ButtonGroup}>
-                          <Droppy title={`Width: ${this.state.width}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleWidthSelected} />
-                          <Droppy title={`Height: ${this.state.height}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleHeightSelected} />
-                        </Dropdown>
-                      </div>
-                      <Button className='ml-2' onClick={() => this.start()}>Start (Quagga)</Button>
-                      <Button className='ml-2' disabled>Start (Quagga2.. TBA)</Button>
-                      <Button className='ml-2' disabled>Start (ZXing.. TBA)</Button>
-                    </>
-                  )
+                  <>
+                    <div>
+                      <Dropdown className='mb-3' as={ButtonGroup}>
+                        <Droppy title={`Width: ${this.state.width}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleWidthSelected} />
+                        <Droppy title={`Height: ${this.state.height}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleHeightSelected} />
+                      </Dropdown>
+                    </div>
+                    <Button className='ml-2' onClick={() => this.start()}>Start (Quagga)</Button>
+                    <Button className='ml-2' disabled>Start (Quagga2.. TBA)</Button>
+                    <Button className='ml-2' disabled>Start (ZXing.. TBA)</Button>
+                  </>
               }
 
               {
@@ -99,7 +100,7 @@ class App extends React.Component<{}, IAppState> {
   stop() {
     console.log("stopping..")
     this.barcodeQuagga.stop();
-    this.setState({ ...this.initialState })
+    this.setState({ ...this.state, active: false })
   }
 
   handleDetected = (code: string) => {
