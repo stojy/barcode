@@ -1,52 +1,20 @@
-import React from 'react';
 import Quagga from 'quagga'
 
-interface IBarcodeProps {
+type OnDetectedCallback = (code: string) => void;
+
+export interface IBarcode {
   width: number,
   height: number,
-  onDetected: (code: string) => void,
+  onDetected: OnDetectedCallback,
 }
 
-interface IBarcodeState {
-  active: boolean
-}
+export class BarcodeQuagga {
+  _onDetected!: OnDetectedCallback;
 
-export class BarcodeQuagga extends React.Component<IBarcodeProps, IBarcodeState> {
-  private readonly initialState = {
-    active: false
-  };
+  start({width, height, onDetected}: IBarcode) {
+    this._onDetected = onDetected
 
-  constructor(props: IBarcodeProps) {
-    super(props)
-
-    // todo; lift state and use a params callback
-    this.state = this.initialState
-  }
-
-  render() {
-    return (
-      <>
-        {
-          this.state.active ? null :
-            <button onClick={() => this.start()}>
-              {"Start (Quagga)"}
-            </button>
-        }
-        {
-          this.state.active ?
-            <button onClick={() => this.stop()}>
-              {"Stop"}
-            </button> : null
-        }
-      </>
-    )
-  }
-
-  start() {
-    console.log("starting..")
     const self = this
-
-    this.setState({ ...this.state, active: true })
 
     const config = {
       numOfWorkers: navigator.hardwareConcurrency,
@@ -56,8 +24,8 @@ export class BarcodeQuagga extends React.Component<IBarcodeProps, IBarcodeState>
         type: "LiveStream",
         target: '#captureTarget',
         constraints: {
-          width: this.props.width,
-          height: this.props.height,
+          width,
+          height,
           facingMode: "environment"
         },
         area: {
@@ -110,17 +78,13 @@ export class BarcodeQuagga extends React.Component<IBarcodeProps, IBarcodeState>
     });
   }
 
-
   stop() {
-    console.log("stopping..")
-    this.setState({ ...this.initialState })
-
     Quagga.offDetected(this.handleDetected);
     Quagga.stop()
   }
 
   handleDetected(data: any) {
-    this.props.onDetected(data.codeResult.code);
+    this._onDetected(data.codeResult.code);
   }
 }
 

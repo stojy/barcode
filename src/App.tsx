@@ -1,20 +1,23 @@
-import React from 'react';
 import './App.css';
-import { BarcodeQuagga } from './components/BarcodeQuagga'
+import React from 'react';
 import { Droppy } from './components/Droppy'
 import logo from './barcode.png'
+import Button from 'react-bootstrap/esm/Button';
+import { BarcodeQuagga } from './components/BarcodeQuagga';
 
 interface IAppState {
   width: number,
   height: number,
   code: string | null,
+  active: boolean,
 }
 
 class App extends React.Component<{}, IAppState> {
   private readonly initialState: IAppState = {
-    width: 1200,
+    width: 800,
     height: 200,
-    code: null
+    code: null,
+    active: false,
   };
 
   constructor(props: any) {
@@ -22,7 +25,8 @@ class App extends React.Component<{}, IAppState> {
     this.state = this.initialState;
   }
 
-  private resolutions: number[] = [100, 200, 250, 300, 480, 800, 960, 1200, 1920];
+  private resolutions: number[] = [100, 200, 250, 300, 480, 800, 960, 1280, 1920];
+  private barcodeQuagga: BarcodeQuagga = new BarcodeQuagga();
 
   render() {
     return (
@@ -34,11 +38,21 @@ class App extends React.Component<{}, IAppState> {
             <br />
             <div id='captureTarget' />
 
-            <span>
-              <Droppy title={`Width: ${this.state.width}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleWidthSelected} />
-              <Droppy title={`Width: ${this.state.height}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleHeightSelected} />
-              
-              <BarcodeQuagga width={this.state.width} height={this.state.height} onDetected={this.handleDetected}/>
+            <div>
+              {
+                this.state.active ?
+                  <Button className='ml-2' onClick={() => this.stop()}>Stop</Button>
+                  :
+                  (
+                    <>
+                      <Droppy title={`Width: ${this.state.width}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleWidthSelected} />
+                      <Droppy title={`Width: ${this.state.height}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleHeightSelected} />
+                      <Button className='ml-2' onClick={() => this.start()}>Start (Quagga)</Button>
+                      <Button className='ml-2' disabled>Start (Quagga2.. TBA)</Button>
+                      <Button className='ml-2' disabled>Start (ZXing.. TBA)</Button>
+                    </>
+                  )
+              }
 
               {
                 this.state.code ?
@@ -48,7 +62,7 @@ class App extends React.Component<{}, IAppState> {
                   </>
                   : null
               }
-            </span>
+            </div>
           </header>
         </div>
       </>
@@ -67,6 +81,19 @@ class App extends React.Component<{}, IAppState> {
     if (val !== undefined) {
       this.setState({ ...this.state, height: Number(val) });
     }
+  }
+
+  start() {
+    console.log("starting..")
+    this.barcodeQuagga.start({ width: this.state.width, height: this.state.height, onDetected: this.handleDetected });
+
+    this.setState({ ...this.state, active: true })
+  }
+
+  stop() {
+    console.log("stopping..")
+    this.barcodeQuagga.stop();
+    this.setState({ ...this.initialState })
   }
 
   handleDetected = (code: string) => {

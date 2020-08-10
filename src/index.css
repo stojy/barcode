@@ -12,8 +12,9 @@ code {
     monospace;
 }
 
-button {
-  font-size: 1.2em
+.mybutton {
+  font-size: 1.2em;
+  margin: 10px;
 }
 
 canvas {
