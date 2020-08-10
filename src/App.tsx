@@ -46,7 +46,7 @@ class App extends React.Component<{}, IAppState> {
                   (
                     <>
                       <Droppy title={`Width: ${this.state.width}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleWidthSelected} />
-                      <Droppy title={`Width: ${this.state.height}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleHeightSelected} />
+                      <Droppy title={`Height: ${this.state.height}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleHeightSelected} />
                       <Button className='ml-2' onClick={() => this.start()}>Start (Quagga)</Button>
                       <Button className='ml-2' disabled>Start (Quagga2.. TBA)</Button>
                       <Button className='ml-2' disabled>Start (ZXing.. TBA)</Button>
