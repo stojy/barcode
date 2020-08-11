@@ -1,4 +1,6 @@
 
+let _track: MediaStreamTrack;
+
 export function getCapabilities(callback: any) {
   navigator.mediaDevices.getUserMedia({
     video: {
@@ -14,11 +16,11 @@ export function getCapabilities(callback: any) {
       video.srcObject = stream;
 
       // get the active track of the stream
-      const track = stream.getVideoTracks()[0];
+      _track = stream.getVideoTracks()[0];
 
       video.addEventListener('loadedmetadata', (e) => {
         window.setTimeout(() => (
-          onCapabilitiesReady(track.getCapabilities())
+          onCapabilitiesReady(_track.getCapabilities())
         ), 500);
       });
 
@@ -31,3 +33,12 @@ export function getCapabilities(callback: any) {
     })
     .catch(err => console.error('getUserMedia() failed: ', err));
 }
+
+export function setTorch(enabled: boolean) {
+  debugger;
+  _track.applyConstraints({
+    advanced: [{ torch: enabled } as any]
+  })
+    .catch(e => console.log(e));
+}
+

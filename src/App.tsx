@@ -7,7 +7,7 @@ import { BarcodeQuagga } from './components/BarcodeQuagga';
 import Dropdown from 'react-bootstrap/esm/Dropdown';
 import ButtonGroup from 'react-bootstrap/esm/ButtonGroup';
 import 'react-bootstrap/esm';
-import { getCapabilities } from './components/camera';
+import { getCapabilities, setTorch } from './components/camera';
 import { ObjectInspector } from 'react-inspector';
 import Checkbox from '@material-ui/core/Checkbox';
 import { FormControlLabel } from '@material-ui/core';
@@ -38,12 +38,14 @@ class App extends React.Component<{}, IAppState> {
 
     this.state = this.initialState;
     console.log(`app.tsx ctor: state=${JSON.stringify(this.state)}`)
-
-    this.getCameraCapabilities();
   }
 
   private resolutions: number[] = [100, 200, 250, 300, 480, 800, 960, 1280, 1920];
   private barcodeQuagga: BarcodeQuagga = new BarcodeQuagga();
+
+  componentDidMount() {
+    this.getCameraCapabilities();
+  }
 
   render() {
     return (
@@ -70,7 +72,7 @@ class App extends React.Component<{}, IAppState> {
                       <Button variant='secondary' onClick={() => this.setState({ ...this.state, showCameraInfo: !this.state.showCameraInfo })}>Show/Hide Camera Info</Button>
 
                       <FormControlLabel className='ml-2'
-                        control={<Checkbox checked={this.state.torchEnabled} onChange={() => this.handleTorchChanged()} name="checkedB"/>}
+                        control={<Checkbox style={{color: "#00e676"}} checked={this.state.torchEnabled} onChange={() => this.handleTorchChanged()} name="checkedB" />}
                         label="Torch"
                       />
                     </div>
@@ -145,13 +147,11 @@ class App extends React.Component<{}, IAppState> {
     });
   }
 
-  
   handleTorchChanged() {
-    this.setState({...this.state, torchEnabled: !this.state.torchEnabled});
+    this.setState({ ...this.state, torchEnabled: !this.state.torchEnabled });
 
-    // todo.. engage torch
+    setTorch(!this.state.torchEnabled);
   }
-
 }
 
 export default App;
