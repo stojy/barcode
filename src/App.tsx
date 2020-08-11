@@ -6,15 +6,18 @@ import Button from 'react-bootstrap/esm/Button';
 import { BarcodeQuagga } from './components/BarcodeQuagga';
 import Dropdown from 'react-bootstrap/esm/Dropdown';
 import ButtonGroup from 'react-bootstrap/esm/ButtonGroup';
+import 'react-bootstrap/esm';
 import { getCapabilities } from './components/camera';
-import { Card, Accordion } from 'react-bootstrap/esm';
+import { ObjectInspector } from 'react-inspector';
+import { Form } from 'react-bootstrap/esm';
 
 interface IAppState {
   width: number,
   height: number,
   code: string | null,
   active: boolean,
-  capabilities: MediaTrackCapabilities | null
+  capabilities: MediaTrackCapabilities | null,
+  showCameraInfo: boolean,
 }
 
 class App extends React.Component<{}, IAppState> {
@@ -23,15 +26,17 @@ class App extends React.Component<{}, IAppState> {
     height: 200,
     code: null,
     active: false,
-    capabilities: null
+    capabilities: null,
+    showCameraInfo: false
   };
 
   constructor(props: any) {
     super(props);
 
     this.state = this.initialState;
-
     console.log(`app.tsx ctor: state=${JSON.stringify(this.state)}`)
+
+    this.getCameraCapabilities();
   }
 
   private resolutions: number[] = [100, 200, 250, 300, 480, 800, 960, 1280, 1920];
@@ -54,13 +59,32 @@ class App extends React.Component<{}, IAppState> {
                   <Button className='ml-2' onClick={() => this.stop()}>Stop</Button>
                   :
                   <>
-                    <div className='mb-3'>
+                    <Form className='mb-3'>
                       <Dropdown as={ButtonGroup}>
                         <Droppy title={`Width: ${this.state.width}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleWidthSelected} />
                         <Droppy title={`Height: ${this.state.height}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleHeightSelected} />
                       </Dropdown>
-                      <Button variant='secondary' onClick={() => this.getCameraCapabilities()}>Camera Capabilities</Button>
+                      <Button variant='secondary' onClick={() => this.setState({ ...this.state, showCameraInfo: !this.state.showCameraInfo })}>Show/Hide Camera Info</Button>
+                      {/* <checkbox>blah</checkbox> */}
+                      {/* <Button type='checkbox'>blah2</Button> */}
+
+                      <label>
+                        <input
+                          type="checkbox"
+                          // name={label}
+                          // checked={true}
+                          // onChange={onCheckboxChange}
+                          className="form-check-input"
+                        />
+                        "hello"
+                      </label>
+                      <Form.Check type="checkbox" label="Check me out" />
+                    </Form>
+
+                    <div className='mt-2 text-left' hidden={!this.state.showCameraInfo}>
+                      <ObjectInspector data={this.state.capabilities} expandLevel={10} showNonenumerable={false} sortObjectKeys={true} theme='chromeDark' />
                     </div>
+
                     <Button className='ml-2' onClick={() => this.start()}>Start (Quagga)</Button>
                     <Button className='ml-2' disabled>Start (Quagga2.. TBA)</Button>
                     <Button className='ml-2' disabled>Start (ZXing.. TBA)</Button>
@@ -75,23 +99,6 @@ class App extends React.Component<{}, IAppState> {
                   </>
                   : null
               }
-
-            <div>
-              <label className='mt-3 capabilities' hidden={!this.state.capabilities} >{JSON.stringify(this.state.capabilities)}</label>
-            </div>
-
-              {/* <Accordion>
-                <Card>
-                  <Card.Header>
-                    <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                      Click me!
-                    </Accordion.Toggle>
-                  </Card.Header>
-                  <Accordion.Collapse eventKey="0">
-                    <Card.Body>Hello! I'm the body</Card.Body>
-                  </Accordion.Collapse>
-                </Card>
-              </Accordion> */}
             </div>
           </header>
         </div>
@@ -140,8 +147,6 @@ class App extends React.Component<{}, IAppState> {
 
   getCameraCapabilities() {
     getCapabilities((capabilities: MediaTrackCapabilities) => {
-      debugger;
-      console.log(capabilities)
       this.setState({ ...this.state, capabilities })
     });
   }
