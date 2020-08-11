@@ -9,7 +9,8 @@ import ButtonGroup from 'react-bootstrap/esm/ButtonGroup';
 import 'react-bootstrap/esm';
 import { getCapabilities } from './components/camera';
 import { ObjectInspector } from 'react-inspector';
-import { Form } from 'react-bootstrap/esm';
+import Checkbox from '@material-ui/core/Checkbox';
+import { FormControlLabel } from '@material-ui/core';
 
 interface IAppState {
   width: number,
@@ -18,6 +19,7 @@ interface IAppState {
   active: boolean,
   capabilities: MediaTrackCapabilities | null,
   showCameraInfo: boolean,
+  torchEnabled: boolean,
 }
 
 class App extends React.Component<{}, IAppState> {
@@ -27,7 +29,8 @@ class App extends React.Component<{}, IAppState> {
     code: null,
     active: false,
     capabilities: null,
-    showCameraInfo: false
+    showCameraInfo: false,
+    torchEnabled: false
   };
 
   constructor(props: any) {
@@ -59,27 +62,18 @@ class App extends React.Component<{}, IAppState> {
                   <Button className='ml-2' onClick={() => this.stop()}>Stop</Button>
                   :
                   <>
-                    <Form className='mb-3'>
+                    <div>
                       <Dropdown as={ButtonGroup}>
                         <Droppy title={`Width: ${this.state.width}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleWidthSelected} />
                         <Droppy title={`Height: ${this.state.height}px`} values={this.resolutions.map(x => `${x}px`)} onSelect={this.handleHeightSelected} />
                       </Dropdown>
                       <Button variant='secondary' onClick={() => this.setState({ ...this.state, showCameraInfo: !this.state.showCameraInfo })}>Show/Hide Camera Info</Button>
-                      {/* <checkbox>blah</checkbox> */}
-                      {/* <Button type='checkbox'>blah2</Button> */}
 
-                      <label>
-                        <input
-                          type="checkbox"
-                          // name={label}
-                          // checked={true}
-                          // onChange={onCheckboxChange}
-                          className="form-check-input"
-                        />
-                        "hello"
-                      </label>
-                      <Form.Check type="checkbox" label="Check me out" />
-                    </Form>
+                      <FormControlLabel className='ml-2'
+                        control={<Checkbox checked={this.state.torchEnabled} onChange={() => this.handleTorchChanged()} name="checkedB"/>}
+                        label="Torch"
+                      />
+                    </div>
 
                     <div className='mt-2 text-left' hidden={!this.state.showCameraInfo}>
                       <ObjectInspector data={this.state.capabilities} expandLevel={10} showNonenumerable={false} sortObjectKeys={true} theme='chromeDark' />
@@ -150,6 +144,14 @@ class App extends React.Component<{}, IAppState> {
       this.setState({ ...this.state, capabilities })
     });
   }
+
+  
+  handleTorchChanged() {
+    this.setState({...this.state, torchEnabled: !this.state.torchEnabled});
+
+    // todo.. engage torch
+  }
+
 }
 
 export default App;
