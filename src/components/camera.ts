@@ -25,15 +25,19 @@ export async function getCapabilities(callback: any) {
   });
 
   function onCapabilitiesReady(capabilities: MediaTrackCapabilities) {
-    callback(capabilities);
+    if (callback)
+      callback(capabilities);
     if (video)
       video.pause();
   }
 }
 
 export async function setTorch(enabled: boolean) {
+  if (!_track) {
+    await getCapabilities(null);
+  }
   await _track.applyConstraints({
     advanced: [{ torch: enabled } as any]
-  })
+  }) 
 }
 

@@ -30,7 +30,7 @@ interface IAppState {
 class App extends React.Component<{}, IAppState> {
   private readonly initialState: IAppState = {
     width: 200,
-    height: 800,
+    height: 480,
     code: null,
     active: false,
     capabilities: null,
