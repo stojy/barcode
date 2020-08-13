@@ -12,6 +12,10 @@ import { ObjectInspector } from 'react-inspector';
 import Checkbox from '@material-ui/core/Checkbox';
 import { FormControlLabel } from '@material-ui/core';
 
+interface IError extends Error{
+  type: any
+}
+
 interface IAppState {
   width: number,
   height: number,
@@ -20,6 +24,7 @@ interface IAppState {
   capabilities: MediaTrackCapabilities | null,
   showCameraInfo: boolean,
   torchEnabled: boolean,
+  error: IError | null
 }
 
 class App extends React.Component<{}, IAppState> {
@@ -30,7 +35,8 @@ class App extends React.Component<{}, IAppState> {
     active: false,
     capabilities: null,
     showCameraInfo: false,
-    torchEnabled: false
+    torchEnabled: false,
+    error: null
   };
 
   constructor(props: any) {
@@ -76,6 +82,10 @@ class App extends React.Component<{}, IAppState> {
                       />
                     </div>
 
+                    <div className='mt-2 text-left' hidden={!this.state.error}>
+                    <ObjectInspector data={this.state.error} expandLevel={10} showNonenumerable={false} sortObjectKeys={true} theme='chromeDark' />
+                    </div>
+
                     <div className='mt-2 text-left' hidden={!this.state.showCameraInfo}>
                       <ObjectInspector data={this.state.capabilities} expandLevel={10} showNonenumerable={false} sortObjectKeys={true} theme='chromeDark' />
                     </div>
@@ -117,7 +127,13 @@ class App extends React.Component<{}, IAppState> {
 
   start() {
     console.log("starting..")
-    this.barcodeQuagga.start({ width: this.state.width, height: this.state.height, onDetected: this.handleDetected });
+    try
+    {
+      this.barcodeQuagga.start({ width: this.state.width, height: this.state.height, onDetected: this.handleDetected });
+    }
+    catch(err) {
+      this.handleError(err);
+    }
 
     this.setState({ ...this.state, active: true })
   }
@@ -146,16 +162,42 @@ class App extends React.Component<{}, IAppState> {
     this.setState({ ...this.state, showCameraInfo: !this.state.showCameraInfo })
   }
 
-  getCameraCapabilities() {
-    getCapabilities((capabilities: MediaTrackCapabilities) => {
-      this.setState({ ...this.state, capabilities })
-    });
+  async getCameraCapabilities() {
+    try
+    {
+      await getCapabilities((capabilities: MediaTrackCapabilities) => {
+        this.setState({ ...this.state, capabilities })
+      });
+    }
+    catch(err) {
+      this.handleError(err);
+    }
   }
 
-  handleTorchChanged() {
+  async handleTorchChanged() {
     this.setState({ ...this.state, torchEnabled: !this.state.torchEnabled });
 
-    setTorch(!this.state.torchEnabled);
+    try
+    {
+      await setTorch(!this.state.torchEnabled);
+    }
+    catch(err) {
+      this.handleError(err);
+    }
+  }
+
+  private handleError(err: Error) {
+    console.error(err);
+
+    // redefining error as the original (MediaStreamError?) Error doesn't seem to have a working toJSON overload
+    // - also the underlying object type gets lost
+    let error : IError = {
+      message: err.message,
+      name: err.name,
+      stack: err.stack,
+      type: Object.prototype.toString.call(err) // https://stackoverflow.com/questions/332422/get-the-name-of-an-objects-type
+    }
+    this.setState({ ...this.state, error})
   }
 }
 
