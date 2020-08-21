@@ -5,7 +5,7 @@ import { BarcodeQuagga } from './BarcodeQuagga';
 import Dropdown from 'react-bootstrap/esm/Dropdown';
 import ButtonGroup from 'react-bootstrap/esm/ButtonGroup';
 import 'react-bootstrap/esm';
-import { getCapabilities, setTorch } from './camera';
+import { getCapabilities, setTorch, getCameraResolution } from './camera';
 import { ObjectInspector } from 'react-inspector';
 import Checkbox from '@material-ui/core/Checkbox';
 import { FormControlLabel } from '@material-ui/core';
@@ -15,12 +15,14 @@ interface IError extends Error {
 }
 
 export function Barcode() {
-  const resolutions: number[] = [100, 200, 250, 300, 480, 800, 960, 1280, 1920];
+  const resolutions: number[] = [1, 100, 200, 250, 300, 480, 720, 721, 960, 1080, 1280, 1281, 1920, 1921];
   const barcodeQuagga: BarcodeQuagga = new BarcodeQuagga();
 
+  const [defaultWidth, defaultHeight] = getCameraResolution()
+
   const [active, setActive] = useState(false);
-  const [width, setWidth] = useState(200);
-  const [height, setHeight] = useState(480);
+  const [width, setWidth] = useState(defaultWidth);
+  const [height, setHeight] = useState(defaultHeight);
   const [code, setCode] = useState<string | null>(null);
   const [error, setError] = useState<IError | null>(null);
   const [capabilities, setCapabilities] = useState<MediaTrackCapabilities | null>(null);

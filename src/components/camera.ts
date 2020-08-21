@@ -38,6 +38,19 @@ export async function setTorch(enabled: boolean) {
   }
   await _track.applyConstraints({
     advanced: [{ torch: enabled } as any]
-  }) 
+  })
+}
+
+export function getCameraResolution(): [number, number] {
+  // return width/height considering..
+  // - screen orientation.. mobile (portrait) or tablet/desktop (landscape)
+  // - low(er) resolution (e.g. 480px) used instead of querying hte camera as higher resolution isn't required and adds unnecessary processing overhead
+  let width = 480
+  let height = 300
+
+  if (window.screen.height > window.screen.width) {
+    return [ height, width ]
+  }
+  return [ width, height ]
 }
 
