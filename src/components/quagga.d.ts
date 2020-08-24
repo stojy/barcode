@@ -2,9 +2,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable prettier/prettier */
 
-// copy/paste import of .\node_modules\quagga\type-definitions\quagga.d.ts re-written as a package with interface exports
-
-
+//
+// copy/paste import of .\node_modules\quagga\type-definitions\quagga.d.ts re-written as a package with some interfaces explicitly exported
+//
 
 // Type definitions for QuaggaJS v2015.05.20 Project:
 // http://serratus.github.io/quaggaJS/ Definitions by: Cam Birch, Peter
@@ -14,8 +14,8 @@
 // export default Quagga;
 
 declare module 'quagga' {
-  declare var Quagga: QuaggaJSStatic;
-  export default Quagga;
+  declare var Quagga: QuaggaJSStatic
+  export default Quagga
 
   interface QuaggaJSStatic {
     /**
@@ -24,23 +24,16 @@ declare module 'quagga' {
      * ready to start. The initialization process also requests for camera
      * access if real-time detection is configured.
      */
-    init(
-      config: QuaggaJSConfigObject,
-      callback?: (err: any) => void
-    ): void;
+    init(config: QuaggaJSConfigObject, callback?: (err: any) => void): void
 
-    init(
-      config: QuaggaJSConfigObject,
-      callback: (err: any) => void,
-      imageWrapper: any
-    ): void;
+    init(config: QuaggaJSConfigObject, callback: (err: any) => void, imageWrapper: any): void
 
     /**
      * When the library is initialized, the start()
      * method starts the video-stream and begins locating and decoding the
      * images.
      */
-    start(): void;
+    start(): void
 
     /**
      * If the decoder is currently running, after calling
@@ -48,12 +41,12 @@ declare module 'quagga' {
      * Additionally, if a camera-stream was requested upon initialization,
      * this operation also disconnects the camera.
      */
-    stop(): void;
+    stop(): void
 
     /**
      * Pauses processing, but does not release any handlers
      */
-    pause(): void;
+    pause(): void
 
     /**
      * This method registers a callback(data) function that is
@@ -62,12 +55,12 @@ declare module 'quagga' {
      * The output varies, depending whether the detection and/or decoding were
      * successful or not.
      */
-    onProcessed(callback: QuaggaJSResultCallbackFunction): void;
+    onProcessed(callback: QuaggaJSResultCallbackFunction): void
 
     /**
      * Removes a callback that was previously registered with @see onProcessed
      */
-    offProcessed(callback: QuaggaJSResultCallbackFunction): void;
+    offProcessed(callback: QuaggaJSResultCallbackFunction): void
 
     /**
      * Registers a callback(data) function which is triggered whenever a
@@ -75,16 +68,16 @@ declare module 'quagga' {
      * data object contains information about the decoding process including the
      * detected code which can be obtained by calling data.codeResult.code.
      */
-    onDetected(callback: QuaggaJSResultCallbackFunction): void;
+    onDetected(callback: QuaggaJSResultCallbackFunction): void
 
     /**
      * Removes a callback that was previously registered with @see onDetected
      */
-    offDetected(callback: QuaggaJSResultCallbackFunction): void;
+    offDetected(callback: QuaggaJSResultCallbackFunction): void
 
-    ResultCollector: QuaggaJSResultCollector;
-    registerResultCollector(resultCollector: QuaggaJSResultCollector): void;
-    setReaders(readers: any): void;
+    ResultCollector: QuaggaJSResultCollector
+    registerResultCollector(resultCollector: QuaggaJSResultCollector): void
+    setReaders(readers: any): void
 
     /**
      * In contrast to the calls described
@@ -92,19 +85,16 @@ declare module 'quagga' {
      * image instead. The provided callback is the same as in onDetected and
      * contains the result data object.
      */
-    decodeSingle(
-      config: QuaggaJSConfigObject,
-      resultCallback: QuaggaJSResultCallbackFunction
-    ): void;
+    decodeSingle(config: QuaggaJSConfigObject, resultCallback: QuaggaJSResultCallbackFunction): void
 
     /**
      * Constructs used for debugging purposes
      */
     ImageDebug: {
-      drawPath: QuaggaJSDebugDrawPath;
-      drawRect: QuaggaJSDebugDrawRect;
-    };
-    ImageWrapper: any;
+      drawPath: QuaggaJSDebugDrawPath
+      drawRect: QuaggaJSDebugDrawRect
+    }
+    ImageWrapper: any
 
     /**
      * an object Quagga uses for drawing and processing, useful for calling code
@@ -112,29 +102,25 @@ declare module 'quagga' {
      */
     canvas: {
       ctx: {
-        image: CanvasRenderingContext2D;
+        image: CanvasRenderingContext2D
         overlay: CanvasRenderingContext2D
-      };
+      }
       dom: {
-        image: HTMLCanvasElement;
+        image: HTMLCanvasElement
         overlay: HTMLCanvasElement
       }
-    };
+    }
 
-    CameraAccess:
-    {
-      getActiveTrack(): MediaStreamTrack;
-    };
+    CameraAccess: {
+      getActiveTrack(): MediaStreamTrack
+    }
   }
-
 
   /**
    * Called whenever an item is detected or a process step has been completed.
    */
   interface QuaggaJSResultCallbackFunction {
-    (
-      data: QuaggaJSResultObject
-    ): void;
+    (data: QuaggaJSResultObject): void
   }
 
   /**
@@ -144,24 +130,14 @@ declare module 'quagga' {
    * typical values 0, 1, 'x', 'y'
    */
   interface QuaggaJSDebugDrawPath {
-    (
-      path: any[],
-      def: QuaggaJSxyDef,
-      ctx: CanvasRenderingContext2D,
-      style: QuaggaJSStyle
-    ): void
+    (path: any[], def: QuaggaJSxyDef, ctx: CanvasRenderingContext2D, style: QuaggaJSStyle): void
   }
 
   /**
    * Called to draw debugging Rectangle
    */
   interface QuaggaJSDebugDrawRect {
-    (
-      pos: any[],
-      size: QuaggaJSRectSize,
-      ctx: CanvasRenderingContext2D,
-      style: QuaggaJSStyle
-    ): void
+    (pos: any[], size: QuaggaJSRectSize, ctx: CanvasRenderingContext2D, style: QuaggaJSStyle): void
   }
 
   /**
@@ -170,16 +146,16 @@ declare module 'quagga' {
    * typical values 0, 1, 'x', 'y'
    */
   interface QuaggaJSxyDef {
-    x: any;
-    y: any;
+    x: any
+    y: any
   }
 
   /**
    * an object with an x and a y value
    */
   interface QuaggaJSxy {
-    x: number;
-    y: number;
+    x: number
+    y: number
   }
 
   /**
@@ -188,8 +164,8 @@ declare module 'quagga' {
    * and height values.
    */
   interface QuaggaJSRectSize {
-    pos: QuaggaJSxy;
-    size: QuaggaJSxy;
+    pos: QuaggaJSxy
+    size: QuaggaJSxy
   }
 
   /**
@@ -198,10 +174,10 @@ declare module 'quagga' {
    * colour.
    */
   interface QuaggaJSStyle {
-    color: string;
+    color: string
 
     /* http://www.w3schools.com/tags/canvas_linewidth.asp */
-    lineWidth: number;
+    lineWidth: number
   }
 
   /**
@@ -211,18 +187,18 @@ declare module 'quagga' {
     /**
      * keep track of the image producing this result
      */
-    capture?: boolean;
+    capture?: boolean
 
     /**
      * maximum number of results to store
      */
-    capacity?: number;
+    capacity?: number
 
     /**
      * a list of codes that should not be recorded. This is effectively a list
      * of filters that return false.
      */
-    blacklist?: QuaggaJSCodeResult;
+    blacklist?: QuaggaJSCodeResult
 
     /**
      * passed a QuaggaJSCodeResult, return true if you want this to be stored,
@@ -230,31 +206,29 @@ declare module 'quagga' {
      * that return false. So if you only want to store results that are ean_13,
      * you would say return codeResult.format==="ean_13"
      */
-    filter?: QuaggaJSResultCollectorFilterFunction;
+    filter?: QuaggaJSResultCollectorFilterFunction
 
     /*
      * a static function that returns you a ResultCollector
      */
-    create?(QuaggaJSResultCollector): QuaggaJSResultCollector;
+    create?(QuaggaJSResultCollector): QuaggaJSResultCollector
 
-    getResults?(): QuaggaJSCodeResult[];
+    getResults?(): QuaggaJSCodeResult[]
   }
 
   /**
    * used for ResultCollector blacklists and filters
    */
   interface QuaggaJSCodeResult {
-    code?: string;
-    format?: string;
+    code?: string
+    format?: string
   }
 
   /**
    * Called to filter which Results to collect in ResultCollector
    */
   interface QuaggaJSResultCollectorFilterFunction {
-    (
-      data: QuaggaJSCodeResult
-    ): boolean;
+    (data: QuaggaJSCodeResult): boolean
   }
 
   /**
@@ -264,43 +238,43 @@ declare module 'quagga' {
    * empty.
    */
   export interface QuaggaJSResultObject {
-    codeResult: QuaggaJSResultObject_CodeResult;
+    codeResult: QuaggaJSResultObject_CodeResult
     line: {
-      x: number;
-      y: number;
-    }[];
-    angle: number;
-    pattern: number[];
-    box: number[][];
-    boxes: number[][][];
+      x: number
+      y: number
+    }[]
+    angle: number
+    pattern: number[]
+    box: number[][]
+    boxes: number[][][]
   }
 
   interface QuaggaJSResultObject_CodeResult {
-    code: string;
-    start: number;
-    end: number;
-    codeset: number;
+    code: string
+    start: number
+    end: number
+    codeset: number
     startInfo: {
-      error: number;
-      code: number;
-      start: number;
-      end: number;
-    };
+      error: number
+      code: number
+      start: number
+      end: number
+    }
     decodedCodes: {
-      error?: number;
-      code: number;
-      start: number;
-      end: number;
-    }[];
+      error?: number
+      code: number
+      start: number
+      end: number
+    }[]
 
     endInfo: {
-      error: number;
-      code: number;
-      start: number;
-      end: number;
-    };
-    direction: number;
-    format: string;
+      error: number
+      code: number
+      start: number
+      end: number
+    }
+    direction: number
+    format: string
   }
 
   interface QuaggaJSConfigObject {
@@ -309,27 +283,28 @@ declare module 'quagga' {
      * Ex: '/test/fixtures/code_128/image-001.jpg'
      * or: 'data:image/jpg;base64,' + data
      */
-    src?: string; inputStream?: {
+    src?: string
+    inputStream?: {
       /**
        * @default "Live"
        */
-      name?: string;
+      name?: string
 
       /**
        * @default "LiveStream"
        */
-      type?: string;
+      type?: string
 
       constraints?: {
         /**
          * @default 640
          */
-        width?: number;
+        width?: number
 
         /**
          * @default 480
          */
-        height?: number;
+        height?: number
 
         /**
          * In cases where height/width does not suffice
@@ -339,13 +314,13 @@ declare module 'quagga' {
         /**
          * @default "environment"
          */
-        facingMode?: string;
+        facingMode?: string
 
         /**
          * Explicitly set the camera to the user's choice
          */
         deviceId?: string
-      };
+      }
 
       /**
        * defines rectangle of the detection/localization area. Useful when you
@@ -359,139 +334,139 @@ declare module 'quagga' {
          * @default "0%", set this and bottom to 25% if you only want to
          * read a 'line' that is in the middle quarter
          */
-        top?: string;
+        top?: string
 
         /**
          * @default "0%"
          */
-        right?: string;
+        right?: string
 
         /**
          * @default "0%"
          */
-        left?: string;
+        left?: string
 
         /**
          * @default "0%", set this and top to 50% if you only want to read a
          * 'line' that is in the middle half
          */
-        bottom?: string;
-      };
+        bottom?: string
+      }
 
-      singleChannel?: boolean;
-      size?: number;
-      sequence?: boolean;
-    };
+      singleChannel?: boolean
+      size?: number
+      sequence?: boolean
+    }
 
     /**
      * @default false
      */
-    debug?: boolean;
+    debug?: boolean
 
     /**
      * @default true
      */
-    locate?: boolean;
+    locate?: boolean
 
     /**
      * @default 4
      */
-    numOfWorkers?: number;
+    numOfWorkers?: number
 
     decoder?: {
       /**
        * @default [ "code_128_reader" ]
        */
-      readers?: string[];
+      readers?: string[]
 
       debug?: {
         /**
          * @default false
          */
-        drawBoundingBox?: boolean;
+        drawBoundingBox?: boolean
 
         /**
          * @default false
          */
-        showFrequency?: boolean;
+        showFrequency?: boolean
 
         /**
          * @default false
          */
-        drawScanline?: boolean;
+        drawScanline?: boolean
 
         /**
          * @default false
          */
-        showPattern?: boolean;
+        showPattern?: boolean
       }
-    };
+    }
 
     locator?: {
       /**
        * @default true
        */
-      halfSample?: boolean;
+      halfSample?: boolean
 
       /**
        * @default "medium"
        * Available values: x-small, small, medium, large, x-large
        */
-      patchSize?: string;
+      patchSize?: string
 
       debug?: {
         /**
          * @default false
          */
-        showCanvas?: boolean;
+        showCanvas?: boolean
 
         /**
          * @default false
          */
-        showPatches?: boolean;
+        showPatches?: boolean
 
         /**
          * @default false
          */
-        showFoundPatches?: boolean;
+        showFoundPatches?: boolean
 
         /**
          * @default false
          */
-        showSkeleton?: boolean;
+        showSkeleton?: boolean
 
         /**
          * @default false
          */
-        showLabels?: boolean;
+        showLabels?: boolean
 
         /**
          * @default false
          */
-        showPatchLabels?: boolean;
+        showPatchLabels?: boolean
 
         /**
          * @default false
          */
-        showRemainingPatchLabels?: boolean;
+        showRemainingPatchLabels?: boolean
 
         boxFromPatches?: {
           /**
            * @default false
            */
-          showTransformed?: boolean;
+          showTransformed?: boolean
 
           /**
            * @default false
            */
-          showTransformedBox?: boolean;
+          showTransformedBox?: boolean
 
           /**
            * @default false
            */
-          showBB?: boolean;
-        };
+          showBB?: boolean
+        }
       }
-    };
+    }
   }
 }

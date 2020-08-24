@@ -2,17 +2,24 @@
 import Quagga, { QuaggaJSResultObject } from 'quagga'
 
 type OnDetectedCallback = (code: string) => void
+type OnInitialisedCallback = () => void
+
+// unfortunately torch capability isn't natively part of MediaTrackCapabilities as it appears to be a browser specific feature
+export interface CameraCapabilities extends MediaTrackCapabilities {
+  torch: boolean
+}
 
 export interface IBarcode {
   width: number
   height: number
+  onInitialised: OnInitialisedCallback | null
   onDetected: OnDetectedCallback
 }
 
 export class BarcodeQuagga {
   _onDetected!: OnDetectedCallback
 
-  start({ width, height, onDetected }: IBarcode): void {
+  start({ width, height, onInitialised, onDetected }: IBarcode): void {
     this._onDetected = onDetected
 
     const config = {
@@ -72,6 +79,10 @@ export class BarcodeQuagga {
       drawingCanvas.style.display = 'none'
 
       Quagga.onDetected(this.handleDetected.bind(this))
+
+      if (onInitialised !== null) {
+        onInitialised()
+      }
       Quagga.start()
     })
   }
@@ -85,12 +96,12 @@ export class BarcodeQuagga {
     this._onDetected(data.codeResult.code)
   }
 
-  getCapabilities(): MediaTrackCapabilities | null {
-    let capabilities: MediaTrackCapabilities | null = null
+  getCapabilities(): CameraCapabilities | null {
+    let capabilities: CameraCapabilities | null = null
 
     var track = Quagga.CameraAccess.getActiveTrack() as MediaStreamTrack
     if (typeof track.getCapabilities === 'function') {
-      capabilities = track.getCapabilities()
+      capabilities = track.getCapabilities() as CameraCapabilities
     }
 
     return capabilities
@@ -110,7 +121,7 @@ export class BarcodeQuagga {
     // camera screen/width is taken from a landscape perspective, so..
     // - for a real device running mobi (i.e. in portrait) the values are reversed
     // - for a simulated device running mobi (i.e. desktop development of mobi) OR desktop the values are left unchanged
-    if (window.screen.height > window.screen.width) {
+    if (window.screen.height > window.screen.width /*&& !!PRODUCTION*/) {
       return [height, width]
     }
     return [width, height]
