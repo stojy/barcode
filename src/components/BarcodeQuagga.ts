@@ -1,5 +1,5 @@
 import Quagga from 'quagga'
-
+ 
 type OnDetectedCallback = (code: string) => void;
 
 export interface IBarcode {
@@ -85,6 +85,37 @@ export class BarcodeQuagga {
 
   handleDetected(data: any) {
     this._onDetected(data.codeResult.code);
+  }
+
+  getCapabilities() : MediaTrackCapabilities | null {
+    let capabilities : MediaTrackCapabilities | null = null;
+
+    var track = Quagga.CameraAccess.getActiveTrack() as MediaStreamTrack;
+    if (typeof track.getCapabilities === 'function') {
+        capabilities = track.getCapabilities();
+    }
+
+    return capabilities
+  }
+
+  async setTorch(enable: boolean) {
+    await Quagga.CameraAccess.getActiveTrack().applyConstraints({
+      advanced: [{ torch: enable } as any]
+    })
+  }  
+
+  getCameraResolution(): [number, number] {
+    // use low(er) resolution (e.g. 480px) instead of the camera's maximum allowed resolution to reduce processing overheads.. also not neeed to read a barcode
+    let width = 480
+    let height = 240
+  
+    // camera screen/width is taken from a landscape perspective, so..
+    // - for a real device running mobi (i.e. in portrait) the values are reversed
+    // - for a simulated device running mobi (i.e. desktop development of mobi) OR desktop the values are left unchanged
+    if (window.screen.height > window.screen.width) {
+      return [height, width]
+    }
+    return [width, height]
   }
 }
 

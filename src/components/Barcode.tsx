@@ -5,7 +5,7 @@ import { BarcodeQuagga } from './BarcodeQuagga';
 import Dropdown from 'react-bootstrap/esm/Dropdown';
 import ButtonGroup from 'react-bootstrap/esm/ButtonGroup';
 import 'react-bootstrap/esm';
-import { getCapabilities, setTorch, getCameraResolution } from './camera';
+//import { getCapabilities, setTorch, getCameraResolution } from './camera';
 import { ObjectInspector } from 'react-inspector';
 import Checkbox from '@material-ui/core/Checkbox';
 import { FormControlLabel } from '@material-ui/core';
@@ -18,7 +18,7 @@ export function Barcode() {
   const resolutions: number[] = [1, 100, 200, 250, 300, 480, 720, 721, 960, 1080, 1280, 1281, 1920, 1921];
   const barcodeQuagga: BarcodeQuagga = new BarcodeQuagga();
 
-  const [defaultWidth, defaultHeight] = getCameraResolution()
+  const [defaultWidth, defaultHeight] = barcodeQuagga.getCameraResolution()
 
   const [active, setActive] = useState(false);
   const [width, setWidth] = useState(defaultWidth);
@@ -85,25 +85,22 @@ export function Barcode() {
   }
 
   const toggleCameraCapabilities = () => {
-    if (!capabilities)
-      getCameraCapabilities();
-    setShowCameraInfo(!showCameraInfo);
-  }
-
-  const getCameraCapabilities = async () => {
     try {
-      await getCapabilities((capabilities: MediaTrackCapabilities) => {
-        setCapabilities(capabilities)
-      });
+      if (!capabilities) {
+        let retrievedCapabilities = barcodeQuagga.getCapabilities();
+        setCapabilities(retrievedCapabilities)
+      }
+
+      setShowCameraInfo(!showCameraInfo);
     }
     catch (err) {
-      handleError(err);
+      handleError(err)
     }
   }
 
   const handleTorchChanged = async () => {
     try {
-      await setTorch(!torchEnabled);
+      await barcodeQuagga.setTorch(!torchEnabled);
     }
     catch (err) {
       handleError(err);
@@ -116,12 +113,22 @@ export function Barcode() {
     <>
       <div>
         <div id='captureTarget' style={{ visibility: active ? 'visible' : 'collapse' }} />
-        <video hidden={true}></video>
 
         <div>
           {
             active ?
-              <Button className='ml-2' onClick={() => stop()}>Stop</Button>
+              <>
+                <Button className='ml-2' onClick={() => stop()}>Stop</Button>
+                <Button className='ml-2' variant='secondary' onClick={toggleCameraCapabilities}>Show/Hide Camera Info</Button>
+                <FormControlLabel className='ml-2'
+                  control={<Checkbox style={{ color: "#00e676" }} checked={torchEnabled} onChange={handleTorchChanged} />}
+                  label="Torch"
+                />
+
+                <div className='mt-2 text-left' hidden={!showCameraInfo}>
+                  <ObjectInspector data={capabilities} expandLevel={10} showNonenumerable={false} sortObjectKeys={true} theme='chromeDark' />
+                </div>
+              </>
               :
               <>
                 <div>
@@ -129,22 +136,7 @@ export function Barcode() {
                     <Droppy title={`Width: ${width}px`} values={resolutions.map(x => `${x}px`)} onSelect={handleWidthSelected} />
                     <Droppy title={`Height: ${height}px`} values={resolutions.map(x => `${x}px`)} onSelect={handleHeightSelected} />
                   </Dropdown>
-                  <Button variant='secondary' onClick={toggleCameraCapabilities}>Show/Hide Camera Info</Button>
-
-                  <FormControlLabel className='ml-2'
-                    control={<Checkbox style={{ color: "#00e676" }} checked={torchEnabled} onChange={handleTorchChanged} />}
-                    label="Torch"
-                  />
                 </div>
-
-                <div className='mt-2 text-left' hidden={!error}>
-                  <ObjectInspector data={error} expandLevel={10} showNonenumerable={false} sortObjectKeys={true} theme='chromeDark' />
-                </div>
-
-                <div className='mt-2 text-left' hidden={!showCameraInfo}>
-                  <ObjectInspector data={capabilities} expandLevel={10} showNonenumerable={false} sortObjectKeys={true} theme='chromeDark' />
-                </div>
-
                 <Button className='ml-2' onClick={() => start()}>Start (Quagga)</Button>
                 <Button className='ml-2' disabled>Start (Quagga2.. TBA)</Button>
                 <Button className='ml-2' disabled>Start (ZXing.. TBA)</Button>
@@ -158,6 +150,9 @@ export function Barcode() {
               </>
               : null
           }
+          <div className='mt-2 text-left' hidden={!error}>
+            <ObjectInspector data={error} expandLevel={10} showNonenumerable={false} sortObjectKeys={true} theme='chromeDark' />
+          </div>
         </div>
       </div>
     </>

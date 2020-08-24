@@ -18,7 +18,7 @@ export async function getCapabilities(callback: any) {
 
   // retrieve capabilities from the stream's active track
   _track = stream.getVideoTracks()[0];
-  video.addEventListener('loadedmetadata', (e) => {
+  video.addEventListener('loadedmetadata', (_e) => {
     window.setTimeout(() => (
       onCapabilitiesReady(_track.getCapabilities())
     ), 500);
@@ -30,7 +30,7 @@ export async function getCapabilities(callback: any) {
     if (video)
       video.pause();
   }
-}
+} 
 
 export async function setTorch(enabled: boolean) {
   if (!_track) {
@@ -42,12 +42,11 @@ export async function setTorch(enabled: boolean) {
 }
 
 export function getCameraResolution(): [number, number] {
-  // return width/height considering..
-  // - screen orientation.. mobile (portrait) or tablet/desktop (landscape)
-  // - low(er) resolution (e.g. 480px) used instead of querying hte camera as higher resolution isn't required and adds unnecessary processing overhead
+  // use low(er) resolution (e.g. 480px) instead of the camera's maximum allowed resolution to reduce processing overheads.. also not neeed to read a barcode
   let width = 480
-  let height = 300
+  let height = 240
 
+  // camera screen/width is taken from a landscape perspective, so for potrait (e.g. mobile) usage the values are reversed
   if (window.screen.height > window.screen.width) {
     return [ height, width ]
   }
