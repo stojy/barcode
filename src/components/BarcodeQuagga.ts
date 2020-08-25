@@ -14,7 +14,7 @@ export interface ErrorDetails extends Error {
   code: number
 }
 
-export interface IBarcode {
+export interface BarcodeSetup {
   width: number
   height: number
   onInitialised: OnInitialisedCallback
@@ -24,7 +24,7 @@ export interface IBarcode {
 export class BarcodeQuagga {
   _onDetected!: OnDetectedCallback
 
-  start({ width, height, onInitialised, onDetected }: IBarcode): void {
+  start({ width, height, onInitialised, onDetected }: BarcodeSetup): void {
     this._onDetected = onDetected
 
     const config = {
