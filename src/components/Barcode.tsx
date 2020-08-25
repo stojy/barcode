@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Droppy } from './Droppy'
 import Button from 'react-bootstrap/esm/Button';
-import { BarcodeQuagga } from './BarcodeQuagga';
+import { BarcodeQuagga, ErrorDetails } from './BarcodeQuagga';
 import Dropdown from 'react-bootstrap/esm/Dropdown';
 import ButtonGroup from 'react-bootstrap/esm/ButtonGroup';
 import 'react-bootstrap/esm';
@@ -44,7 +44,7 @@ export function Barcode() {
   const start = () => {
     console.log("starting..")
     try {
-      barcodeQuagga.start({ width, height, onDetected: handleDetected });
+      barcodeQuagga.start({ width, height, onDetected: handleDetected, onInitialised: handleInitialised });
     }
     catch (err) {
       handleError(err);
@@ -62,6 +62,12 @@ export function Barcode() {
     console.log(`detected: code=${code}`)
     setCode(code)
     beep();
+  }
+
+  const handleInitialised = (error: ErrorDetails | null) => {
+    console.log(`initialised: error=${error}`)
+    if (error)
+      handleError(error)
   }
 
   const beep = () => {

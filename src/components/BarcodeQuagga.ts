@@ -2,17 +2,22 @@
 import Quagga, { QuaggaJSResultObject } from 'quagga'
 
 type OnDetectedCallback = (code: string) => void
-type OnInitialisedCallback = () => void
+type OnInitialisedCallback = (error: ErrorDetails | null) => void
 
 // unfortunately torch capability isn't natively part of MediaTrackCapabilities as it appears to be a browser specific feature
 export interface CameraCapabilities extends MediaTrackCapabilities {
   torch: boolean
 }
 
+// unfortunately quagga's error type is unspecified so a 'common' error type is defined here instead
+export interface ErrorDetails extends Error {
+  code: number
+}
+
 export interface IBarcode {
   width: number
   height: number
-  onInitialised: OnInitialisedCallback | null
+  onInitialised: OnInitialisedCallback
   onDetected: OnDetectedCallback
 }
 
@@ -73,17 +78,25 @@ export class BarcodeQuagga {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Quagga.init(config, (err: any) => {
-      if (err) throw Error(err)
-
-      const drawingCanvas = Quagga.canvas.dom.overlay
-      drawingCanvas.style.display = 'none'
-
-      Quagga.onDetected(this.handleDetected.bind(this))
-
-      if (onInitialised !== null) {
-        onInitialised()
+      // unfortunately quagga doesn't define the error type so instead we reconstruct a 'common' error type here
+      let error: ErrorDetails | null = null;
+      if (err) {
+        error = {
+          code: 'code' in err ? err.code : 0,
+          message: 'message' in err ? err.message : '',
+          name: 'name' in err ? err.name : '',
+          stack: 'stack' in err ? err.stack : ''
+        }
       }
-      Quagga.start()
+      else {
+        const drawingCanvas = Quagga.canvas.dom.overlay
+        drawingCanvas.style.display = 'none'
+
+        Quagga.onDetected(this.handleDetected.bind(this))
+        Quagga.start()
+      }
+
+      onInitialised(error)
     })
   }
 
