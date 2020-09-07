@@ -146,6 +146,15 @@ export function Barcode() {
                 <Button className='ml-2' onClick={() => start()}>Start (Quagga)</Button>
                 <Button className='ml-2' disabled>Start (Quagga2.. TBA)</Button>
                 <Button className='ml-2' disabled>Start (ZXing.. TBA)</Button>
+
+                <form action=".">
+                  <div>
+                    <label>standard: <input></input></label>
+                  </div>
+                  <div>
+                    <label>search2: <input type="search"></input></label>
+                  </div>
+                </form>
               </>
           }
           {
